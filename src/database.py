@@ -1,5 +1,5 @@
 from connections import connectWithMongoDB
-from schemas import DeviceFields, TenantFields
+from schemas import DeviceFields, RequiredValueFields, TenantFields
 
 # MongoDB connection
 db = None
@@ -85,9 +85,31 @@ def updateDeviceAttribute(tenantId, deviceId, attribute, value):
 def updateDeviceState(tenantId, deviceId, state):
     updateDeviceAttribute(tenantId, deviceId, DeviceFields.state.value, state)
 
-def updateDeviceInterval(tenantId, deviceId, interval):
-    updateDeviceAttribute(tenantId, deviceId, DeviceFields._interval.value, interval)
+#def updateDeviceInterval(tenantId, deviceId, interval):
+    #updateDeviceAttribute(tenantId, deviceId, DeviceFields._interval.value, interval)
 
+def updateLastValue(newValue, nameValue, tenantId, deviceId):
+    checkNone(
+        col.update_one(
+            #query_get_requiredValue_device(tenantId, deviceId, nameValue),
+            filter=query_tenant(tenantId),
+            update={
+                "$set" : {
+                    TenantFields.devices.value + ".$[device]." + DeviceFields.required_values.value + ".$[value]." + RequiredValueFields._lastValue.value : newValue
+                }
+            },
+            upsert=False,
+            array_filters=[
+                {
+                    "device." + DeviceFields.device_id.value : deviceId
+                },
+                {
+                    "value." + RequiredValueFields.nameValue.value : nameValue
+                }
+            ]
+        ),
+        col
+    )
 
 # --------------------------------------------------
 # Auxiliary functions
@@ -102,6 +124,13 @@ def query_device(deviceid):
 
 def query_get_device(tenantid, deviceid):
     return { TenantFields.tenant_id.value : tenantid, TenantFields.devices.value + "." + DeviceFields.device_id.value : deviceid}
+
+def query_get_requiredValue_device(tenantid, deviceid, nameValue):
+    return { 
+        TenantFields.tenant_id.value : tenantid, 
+        TenantFields.devices.value + "." + DeviceFields.device_id.value : deviceid,
+        TenantFields.devices.value + "." + DeviceFields.required_values.value + "." + RequiredValueFields.nameValue.value : nameValue
+    }
 
 def checkNone(object, check):
     if (check != None):

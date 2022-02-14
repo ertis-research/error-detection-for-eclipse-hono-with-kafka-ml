@@ -60,6 +60,7 @@ def connectWithHonoByAMQP(tenant):
         auth = credentials[CredentialsFields.username.value] + ":" + credentials[CredentialsFields.password.value] + "@"
     server = "amqp://" + auth + tenant[TenantFields.amqp_server.value]
     address = "telemetry/" + tenant[TenantFields.tenant_id.value]
+    print(address)
 
     conn = BlockingConnection(server)
     receiver = conn.create_receiver(address)

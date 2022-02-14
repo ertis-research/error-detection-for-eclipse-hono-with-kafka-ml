@@ -44,7 +44,6 @@ def tenants():
             return jsonify(err.messages), 400
 
         # Save the data to the database
-        removeAttributeInDevices(data, DeviceFields._interval.value)
         insertOneTenant(data)
 
         msg = ""
@@ -151,7 +150,6 @@ def devices(tenantid):
             return jsonify(err.messages), 400
 
         # Save the data to the database
-        removeAttribute(data, DeviceFields._interval.value)
         addDeviceToTenant(tenantid, data)
 
         msg = ""

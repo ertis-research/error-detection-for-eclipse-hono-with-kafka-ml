@@ -9,8 +9,8 @@ class PerpetualTimer():
    """
    A Thread that executes infinitely
    """
-   def __init__(self, hFunction, args, interval=None):
-      self.interval = interval
+   def __init__(self, hFunction, args):
+      self.interval = None
       self.tLastMsg = -1
       self.modifyInterval = True
       self.hFunction = hFunction

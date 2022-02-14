@@ -8,7 +8,7 @@ class StateOptions(Enum):
 class RequiredValueFields(Enum):
     nameValue = "name"
     format = "format"
-    lastValue = "last_value"
+    _lastValue = "last_value"
 
 class CredentialsFields(Enum):
     username = "username"
@@ -19,7 +19,6 @@ class DeviceFields(Enum):
     kafka_topic = "kafka_topic"
     required_values = "required_values"
     state = "state"
-    _interval = "_interval"
 
 class TenantFields(Enum):
     tenant_id = "tenant_id"
@@ -33,7 +32,7 @@ class TenantFields(Enum):
 RequireValueDict = {}
 RequireValueDict[RequiredValueFields.format.value] = f.String(required=True)
 RequireValueDict[RequiredValueFields.nameValue.value] = f.String(required=True)
-RequireValueDict[RequiredValueFields.lastValue.value] = f.String(required=False)
+RequireValueDict[RequiredValueFields._lastValue.value] = f.String(required=False)
 
 RequireValueSchema = Schema.from_dict(RequireValueDict)
 
@@ -46,9 +45,8 @@ CredentialsSchema = Schema.from_dict(CredentialsDict)
 DeviceDict = {}
 DeviceDict[DeviceFields.device_id.value] = f.String(required=True)
 DeviceDict[DeviceFields.kafka_topic.value] = f.String(required=True)
-DeviceDict[DeviceFields.required_values.value] = f.List(f.Nested(RequireValueSchema()))
+DeviceDict[DeviceFields.required_values.value] = f.List(f.Nested(RequireValueSchema()), required=True)
 DeviceDict[DeviceFields.state.value] = f.String(required=True, validate=validate.OneOf([StateOptions.inactive.value, StateOptions.active.value]))
-DeviceDict[DeviceFields._interval.value] = f.Float(required=False)
 
 DeviceSchema = Schema.from_dict(DeviceDict)
 
