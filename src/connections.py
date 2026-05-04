@@ -1,21 +1,10 @@
-#from uamqp.client import ReceiveClient
-#from uamqp.authentication import SASLPlain
+import os
 from kafka import KafkaProducer
-from consts import DEFAULT_PORT_RABBITMQ, MONGO_URI
 from flask_pymongo import PyMongo
 from schemas import CredentialsFields, TenantFields
 from proton.handlers import MessagingHandler
 from proton.reactor import Container
 from proton.utils import BlockingConnection
-
-
-def connectWithMongoDB(app):
-    app.config["MONGO_URI"] = MONGO_URI
-    mongodb_client = PyMongo(app)
-    db = mongodb_client.db
-    col = db.tenants
-    print("[Log APP]: Connected to MongoDB")
-    return db, col
 
 
 def connectWithKafka(tenant):

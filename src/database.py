@@ -1,13 +1,10 @@
-from connections import connectWithMongoDB
+import os
+from flask import request
+from pymongo import MongoClient
 from schemas import DeviceFields, RequiredValueFields, TenantFields
 
-# MongoDB connection
-db = None
-col = None
-
-def initDatabase(app):
-    global db, col
-    db, col = connectWithMongoDB(app)
+db = MongoClient(os.getenv("MONGO_URI")).db
+col = db.tenants
 
 # --------------------------------------------------
 # Query functions

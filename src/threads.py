@@ -36,6 +36,7 @@ def initThreads():
     threads = {}
     tenants = getAllTenants()
     for tenant in tenants:
+        print(tenant)
         if(TenantFields.state.value in tenant and tenant[TenantFields.state.value] == StateOptions.active.value):
             createThread(tenant)
 

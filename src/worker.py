@@ -109,6 +109,7 @@ class Worker(Thread):
         self._stop_event = Event()
         self.producer = connectWithKafka(self.tenant)
         self.devices_timers = {}
+        print("TENANT CREADO")
 
     def stop(self):
         self._stop_event.set()
